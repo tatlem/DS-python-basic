@@ -30,68 +30,61 @@
 
 
 class Cell:
-    def __init__(self, cells):
-        self.cells = cells
-        self.length = len(cells)
-        pass
+    def __init__(self, length):
+        self.length = length
 
     # Сложение. Объединение двух клеток. При этом число ячеек общей клетки должно равняться сумме ячеек исходных
     # двух клеток.
     def __add__(self, other):
-        r = self.cells + other.cells
-
-        # i = 0
-        # a = self
-        # b = other
-        #
-        # # swap to biggest first
-        # if a.length < b.length:
-        #     b = self
-        #     a = other
-        #
-        # for cell_a in a.cells:
-        #     cell_b = 0
-        #
-        #     try:
-        #         cell_b = b.cells[i]
-        #     except IndexError:
-        #         pass
-        #
-        #     r.append(cell_a + cell_b)
-        #     i += 1
+        r = self.length + other.length
 
         return Cell(r)
 
     # Вычитание. Участвуют две клетки. Операцию необходимо выполнять только если разность количества ячеек двух клеток
     # больше нуля, иначе выводить соответствующее сообщение.
     def __sub__(self, other):
-        len_1 = len(self.cells)
-        len_2 = len(other.cells)
+        diff = self.length - other.length
 
-        if len_1 - len_2 <= 0:
-            raise Exception('Difference is less')
+        if diff <= 0:
+            raise Exception('Cell left is less than Cell right')
 
-        print(len_1, len_2)
-        pass
+        return Cell(diff)
 
     # Умножение. Создается общая клетка из двух. Число ячеек общей клетки определяется как произведение количества
     # ячеек этих двух клеток.
     def __mul__(self, other):
-        pass
+        return Cell(self.length * other.length)
 
     # Деление. Создается общая клетка из двух. Число ячеек общей клетки определяется как целочисленное деление
     # количества ячеек этих двух клеток.
     def __truediv__(self, other):
-        pass
-
+        return Cell(round(self.length / other.length))
 
     def __str__(self):
-        return f'Cell {self.__dict__["cells"]} has {self.length} cell(s)'
+        return f'Cell has {self.length} cell(s)'
+
+    def make_order(self, rows_num):
+        if rows_num < 1:
+            raise Exception('Rows number can\'t be less one')
+
+        full = self.length // rows_num
+        rest = self.length % rows_num
+
+        print(('\n' + ('*' * rows_num)) * full)
+
+        if rest:
+            print('*' * rest)
 
 
-cell_1 = Cell((1, 2, 3))
-cell_2 = Cell((4, 5, 6, 7))
+cell_1 = Cell(3)
+cell_2 = Cell(12)
 print(cell_1)
 print(cell_2)
-print(cell_1 + cell_2)
-print(cell_2 - cell_1)
+print('Sum', cell_1 + cell_2)
+print('Sub', cell_2 - cell_1)
+print('Mul', cell_1 * cell_2)
+print('Div', cell_2 / cell_1)
+print('-' * 10)
+print('Print cells:')
+Cell.make_order(cell_1, 5)
+Cell.make_order(cell_2, 5)
